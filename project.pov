@@ -20,15 +20,15 @@ plane {
 
 #declare ground_ceiling = box {
     <-1, -1, -1>, <1, 1, 1>
-    scale <5, 0.1, 5>
+    scale <0, 0.02, 0>
 }
 
 #declare wall = box {
     <-1, -1, -1>, <1, 1, 1>
-    scale <0.1, 5, 5>
+    scale <0.02, 0, 0>
 }
 
-merge {
+#declare room = merge {
     object { 
         ground_ceiling
         texture { DMFLightOak scale 0.5 }
@@ -36,20 +36,31 @@ merge {
     object { 
         ground_ceiling
         pigment { White }
-        translate <0, 5, 0>
+        translate <0, 1, 0>
     }
     object { 
         wall
         pigment { MyGray }
         rotate 90*y
-        translate <0, 0, 5>
+        translate <0, 0, 1>
     }
     object {
         wall
         pigment { White }
         rotate 90*x
-        translate <5, 0, 0>
+        translate <1, 0, 0>
     }
+    object {
+        wall
+        pigment { White }
+        rotate 90*x
+        translate <-1, 0, 0>
+    }
+}
+
+object {
+    room
+    scale 5
 }
 
 #declare Lightbulb = union {
@@ -72,14 +83,13 @@ merge {
         translate 1.5*z
     }
     rotate -90 * x
-    scale .5
+    scale .2
 }
 
 light_source {
-    <0, 5, 0>
+    <0, 4, 0>
     color White
     area_light <1, 0, 0>, <0, 1, 0>, 2, 2
-    adaptive 1
     jitter
     looks_like { Lightbulb }
 }
