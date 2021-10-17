@@ -1,21 +1,25 @@
 #include "colors.inc"
-#include "stones.inc"
+#include "woods.inc"
 #include "textures.inc"
+#include "skies.inc"
+#include "makegrass.inc"
 
 #declare MyGray = rgb<53/255, 58/255, 55/255>;
 
 camera {
 //    location <0, 7, 5>
 //    look_at <0, 0, 5>
-    location <0, 2, -12>
+    // location <2.5, 2.5, 4.5> // camera wall near the window
+    //look_at <-2.5, 0, 5> // camera wall near the window
+    location <0, 7, -12>
     look_at <0, 1, 2>
 }
 
-background { SkyBlue }
+sky_sphere { S_Cloud2 }
 
 plane {
     <0, 1, 0>, 0
-    texture { Cork }
+    pigment { Green }
 }
 
 #declare ground_ceiling = box {
@@ -28,19 +32,86 @@ plane {
     scale <0.02, 0, 0>
 }
 
+#declare window = intersection {
+    object {
+        box {
+            <-1, -1, -1>, <1, 1, 1>
+            scale <0.25, 0.25, 0.5>
+            translate 0.5 * y
+        }
+    }
+    object {
+        wall
+    }
+}
+
+// Wall with a hole
+#declare wall_with_a_hole = difference {
+    object {
+        wall
+    }
+    object {
+        box {
+            <-1, -1, -1>, <1, 1, 1>
+            scale <0.25, 0.25, 0.5>
+            translate 0.5 * y
+        }
+    }
+}
+
+
+#declare window_wall = merge {
+    object {
+        wall_with_a_hole 
+        pigment { MyGray }
+    }
+    object {
+        window
+        texture { Glass }
+    }
+}
+
+#declare bed = merge {
+    // Base of the bed
+    object {
+        box {
+            <-1, -1, -1>, <1, 1, 1>
+        }
+        texture { T_Wood2 }
+        scale <0.5, 0.25, 0.25>
+    }
+    // Mattress
+    object {
+        box {
+            <-1, -1, -1>, <1, 1, 1>
+            scale <0.45, 0.04, 0.23>
+        }
+        pigment { White }
+        translate <0, 0.25, 0>
+        texture {
+            pigment { color White }
+            normal { bumps 1 scale 0.2 }
+            finish { phong 1 }
+        }
+    }
+    scale y * 0.8
+    rotate 90*y
+} 
+
 #declare room = merge {
     object { 
         ground_ceiling
-        texture { DMFLightOak scale 0.5 }
+        texture {
+            DMFLightOak scale 0.5
+        }
     }
     object { 
         ground_ceiling
         pigment { White }
         translate <0, 1, 0>
     }
-    object { 
-        wall
-        pigment { MyGray }
+    object {
+        window_wall
         rotate 90*y
         translate <0, 0, 1>
     }
@@ -55,6 +126,10 @@ plane {
         pigment { White }
         rotate 90*x
         translate <-1, 0, 0>
+    }
+    object {
+        bed
+        translate <-0.72, 0, 0.5>
     }
 }
 
