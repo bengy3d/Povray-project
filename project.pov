@@ -3,16 +3,17 @@
 #include "textures.inc"
 #include "skies.inc"
 #include "stones.inc"
+#include "shapes.inc"
 
 #declare MyGray = rgb<53/255, 58/255, 55/255>;
 
 camera {
 //    location <0, 7, 5>
 //    look_at <0, 0, 5>
-    location <2.5, 2.5, 4> // camera wall near the window
-    look_at <-2.5, 0, 5> // camera wall near the window
-    //location <0, 2, -12>
-    //look_at <0, 1, 2>
+    //location <2.5, 2.5, 3> // camera wall near the window
+    //look_at <-2.5, 0, 5> // camera wall near the window
+    location <0, 2, -12>
+    look_at <0, 1, 2>
 }
 
 sky_sphere { S_Cloud2 }
@@ -59,10 +60,10 @@ plane {
     }
 }
 
-#declare sill = box {
-    <-1, 0, -1>, <1, 2, 1>
-    scale <0.5, 0.02, 0.1>
-    texture { T_Stone25 }
+#declare sill = object {
+    Round_Box(<-1, 0, -1>, <1, 2, 1>, 0.125, 0)
+    scale <0.5, 0.02, 0.05>
+    texture { T_Grnt20 scale .4}
 }
 
 
@@ -88,10 +89,8 @@ plane {
     }
     // Mattress
     object {
-        box {
-            <-1, -1, -1>, <1, 1, 1>
-            scale <0.45, 0.04, 0.23>
-        }
+        Round_Box(<1, 1, 1>, <-1, -1, -1>, 0.125, 0)
+        scale <0.45, 0.04, 0.23>
         pigment { White }
         translate <0, 0.25, 0>
         texture {
@@ -102,13 +101,14 @@ plane {
     }
     scale y * 0.8
     rotate 90*y
-} 
+}
 
 #declare room = merge {
     object { 
         ground_ceiling
         texture {
             DMFLightOak scale 0.5
+            finish { phong 1 }
         }
     }
     object { 
@@ -123,7 +123,7 @@ plane {
     }
     object {
         sill
-        translate <0, 0.3, 1>
+        translate <0, 0.27, 0.95>
     }
     object {
         wall
