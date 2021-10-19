@@ -27,7 +27,7 @@ plane {
 
 #declare ground_ceiling = box {
     <-1, 0, -1>, <1, 2, 1>
-    scale <0, 0.02, 0>
+    scale <0, 0.01, 0>
 }
 
 #declare wall = box {
