@@ -2,17 +2,17 @@
 #include "woods.inc"
 #include "textures.inc"
 #include "skies.inc"
-#include "makegrass.inc"
+#include "stones.inc"
 
 #declare MyGray = rgb<53/255, 58/255, 55/255>;
 
 camera {
 //    location <0, 7, 5>
 //    look_at <0, 0, 5>
-    // location <2.5, 2.5, 4.5> // camera wall near the window
-    //look_at <-2.5, 0, 5> // camera wall near the window
-    location <0, 7, -12>
-    look_at <0, 1, 2>
+    location <2.5, 2.5, 4> // camera wall near the window
+    look_at <-2.5, 0, 5> // camera wall near the window
+    //location <0, 2, -12>
+    //look_at <0, 1, 2>
 }
 
 sky_sphere { S_Cloud2 }
@@ -36,8 +36,8 @@ plane {
     object {
         box {
             <-1, -1, -1>, <1, 1, 1>
+            translate 2.25 * y
             scale <0.25, 0.25, 0.5>
-            translate 0.5 * y
         }
     }
     object {
@@ -53,10 +53,16 @@ plane {
     object {
         box {
             <-1, -1, -1>, <1, 1, 1>
+            translate 2.25 * y
             scale <0.25, 0.25, 0.5>
-            translate 0.5 * y
         }
     }
+}
+
+#declare sill = box {
+    <-1, 0, -1>, <1, 2, 1>
+    scale <0.5, 0.02, 0.1>
+    texture { T_Stone25 }
 }
 
 
@@ -114,6 +120,10 @@ plane {
         window_wall
         rotate 90*y
         translate <0, 0, 1>
+    }
+    object {
+        sill
+        translate <0, 0.3, 1>
     }
     object {
         wall
