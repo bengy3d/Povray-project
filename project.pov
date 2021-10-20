@@ -28,12 +28,12 @@ plane {
 
 #declare ground_ceiling = box {
     <-1, 0, -1>, <1, 2, 1>
-    scale <5, 0.05, 5> //changed
+    scale <5, 0.05, 5>
 }
 
 #declare wall = box {
     <-1, 0, -1>, <1, 2, 1>
-    scale <0.1, 2.5, 5> //changed
+    scale <0.1, 2.5, 5>
 }
 // Glass of the window
 #declare glass = intersection {
@@ -41,7 +41,7 @@ plane {
         box {
             <-1, 0, -1>, <1, 2, 1>
             translate 1.25 * y
-            scale <1.25, 1.25, 2.5> //changed
+            scale <1.25, 1.25, 2.5>
         }
     }
     object {
@@ -52,10 +52,10 @@ plane {
 // Sill of the window
 #declare sill = object {
     Round_Box(<-1, 0, -1>, <1, 2, 1>, 0.125, 0)
-    scale <2.5, 0.1, 0.25> //changed
+    scale <2.5, 0.1, 0.25>
     texture { T_Grnt20 scale .4}
     rotate 90*y
-    translate <0, 1.35, 0> //changed
+    translate <0, 1.35, 0>
 }
 // merging glass and sill into window
 #declare window = merge {
@@ -74,7 +74,7 @@ plane {
     }
     object {
         glass
-        scale <10, 0, 0> //changed
+        scale <10, 0, 0>
     }
 }
 
@@ -95,17 +95,16 @@ plane {
             <-1, 0, -1>, <1, 2, 1>
         }
         texture { T_Wood2 }
-        scale <2.5, 0.75, 1.25> //changed
+        scale <2.5, 0.75, 1.25>
     }
     // Mattress
     object {
         box {<-1, 0, -1>, <1, 2, 1>}
-        scale <2.25, 0.2, 1.15> //changed
-        pigment { White }
-        translate <0, 1.25, 0> //changed
+        scale <2.25, 0.2, 1.15>
+        translate <0, 1.25, 0>
         texture {
             pigment { color White }
-            normal { bumps 1 scale 0.2 }
+            normal { bumps 1 }
             finish { phong 1 }
         }
     }
@@ -114,18 +113,14 @@ plane {
 }
 
 #declare base_of_desk = difference {
-    object {
-        box {
-            <-1, 0, -1>, <1, 2, 1>
-            scale <2.5, 0.75, 1> //changed
-        }
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <2.5, 0.75, 1>
     }
-    object {
-        box {
-            <-1, 0, -1>, <1, 2, 1>
-            scale <1.25, 0.6, 5> //changed
-        } 
-    }
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <1.25, 0.6, 5>
+    } 
     texture { T_Wood2 }
 }
 
@@ -282,13 +277,40 @@ plane {
     translate -0.075*y
 }
 
-#declare monitor = difference {
-    box {
-        <-1,0,-1>, <1,2,1>
-        scale 0.1 * z
+#declare monitor = union {
+    difference {
+        box {
+            <-1,0,-1>, <1,2,1>
+            scale <0.6, 0.5, 0.1>
+        }
+        box {
+            <-1, 0, -1>, <1, 2, 1>
+            scale <0.55, 0.45, 0.1>
+            translate <0, .08, -.15>
+        }
+        pigment { MyGray }
     }
-}
-
+    intersection {
+        box {
+            <-1,0,-1>, <1,2,1>
+            scale <0.55, 0.45, 0.1>
+            translate <0, .025, -.16>
+        }
+        box {
+            <-1,0,-1>, <1,2,1>
+            scale <0.6, 0.5, 0.1>
+        }
+        texture { 
+            finish {
+                specular 1
+                roughness 0.001
+                ambient 0
+                diffuse 0
+            }
+        }
+    }
+    translate 0.5*y
+} 
 
 #declare room = merge {
     object { 
@@ -332,6 +354,9 @@ plane {
         rotate 45*y
         translate <2, 0, 2.25>
     }
+    object {
+        monitor
+    }
 }
 
 object {
@@ -367,4 +392,11 @@ light_source {
     //area_light <1, 0, 0>, <0, 1, 0>, 2, 2
     //jitter
     looks_like { Lightbulb }
+}
+
+light_source {
+    <0,1,-2>
+    color White
+    spotlight
+    point_at <0, 0, 0>
 }
