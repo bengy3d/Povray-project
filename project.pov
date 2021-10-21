@@ -112,17 +112,6 @@ plane {
     rotate 90*y
 }
 
-#declare base_of_desk = difference {
-    box {
-        <-1, 0, -1>, <1, 2, 1>
-        scale <2.5, 0.75, 1>
-    }
-    box {
-        <-1, 0, -1>, <1, 2, 1>
-        scale <1.25, 0.6, 5>
-    } 
-    texture { T_Wood2 }
-}
 
 #declare chair_wheel = difference {
     sphere {
@@ -277,28 +266,44 @@ plane {
     translate -0.075*y
 }
 
-#declare monitor = union {
+#declare monitor_base = merge {
+    cylinder {
+        <0,0,0>, <0,0.05,0>, 0.2
+        translate y*0.02
+    }
+    cylinder {
+        <0,0.05,0>, <0,0.3,0>, 0.05
+    }
+    pigment { MyGray }
+}
+
+#declare monitor_frame = box {
+    <-1,0,-1>, <1,2,1>
+    scale <0.6, 0.5, 0.1>
+}
+
+#declare monitor_screen = box {
+    <-1, 0, -1>, <1, 2, 1>
+    scale <0.55, 0.45, 0.1>
+    translate <0, .05, -.15>
+}
+
+#declare monitor_connect_screen_frame = merge {
     difference {
-        box {
-            <-1,0,-1>, <1,2,1>
-            scale <0.6, 0.5, 0.1>
+        object {
+            monitor_frame
         }
-        box {
-            <-1, 0, -1>, <1, 2, 1>
-            scale <0.55, 0.45, 0.1>
-            translate <0, .08, -.15>
+        object {
+            monitor_screen
         }
         pigment { MyGray }
     }
     intersection {
-        box {
-            <-1,0,-1>, <1,2,1>
-            scale <0.55, 0.45, 0.1>
-            translate <0, .025, -.16>
+        object {
+            monitor_screen
         }
-        box {
-            <-1,0,-1>, <1,2,1>
-            scale <0.6, 0.5, 0.1>
+        object {
+            monitor_frame
         }
         texture { 
             finish {
@@ -309,8 +314,136 @@ plane {
             }
         }
     }
-    translate 0.5*y
-} 
+    scale <1.3,0,0.35>
+    translate 0.3*y
+}
+
+#declare monitor = merge {
+    object {
+        monitor_connect_screen_frame
+    }
+    object {
+        monitor_base
+    }
+}
+
+#declare cd_drive = box {
+    <-1, 0, -1>, <1,2,1>
+    scale <0.2, 0.05, 0.02>
+    texture {Silver_Texture}
+}
+
+#declare status_diode = sphere {
+    <0, 0, 0>, 0.02
+    scale <0, 0, 0.2>
+}
+
+#declare pc = merge {
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <0.3, 0.5, 0.7>
+        pigment { White }
+    }
+    object {
+        cd_drive
+        translate <0, 0.75, -0.7>
+    }
+    object {
+        cd_drive
+        translate <0, 0.6, -0.7>
+    }
+    // Power button
+    sphere {
+        <0, 0, 0>, 0.03
+        scale <0, 0, 0.5>
+        translate <0, 0.25, -0.7>
+        texture {Silver_Texture}
+    }
+    object {
+        status_diode
+        translate <-0.05, 0.3, -0.7>
+        pigment {Green}
+    }
+    object {
+        status_diode
+        translate <0.05, 0.3, -0.7>
+        pigment { Red }
+    }
+}
+
+#declare drawer_pull = difference {
+    torus {
+      4, 1
+      rotate -90*x
+    }
+    box { <-5, -5, -1>, <5, 0, 1> }
+    texture { Silver_Texture }
+    scale 0.02
+    rotate -180 * x
+    translate <0, 0.1, 0>
+}
+
+#declare drawer = merge {
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <0.51, 0.2, 0.05>
+        texture { T_Wood2 }
+    }
+    object {
+        drawer_pull
+        translate <0, 0.125, -0.06>
+    }
+}
+
+#declare base_of_desk = difference {
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <2.5, 0.75, 1>
+    }
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <1.35, 0.67, 5>
+        translate y * -0.02
+    }
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <0.51, 0.63, 0.9>
+        translate <1.93, 0.05, -0.2>
+    }
+    texture { T_Wood2 }
+}
+
+#declare desk = merge {
+    object {
+        base_of_desk
+    }
+    object {
+        drawer
+        translate <-1.93, 1, -1>
+    }
+    object {
+        drawer
+        translate <-1.93, 0.55, -1>
+    }
+    object {
+        drawer
+        translate <-1.93, 0.1, -1>
+    }
+    object {
+        monitor
+        rotate -10*y
+        translate <-0.8, 1.5, 0.3>
+    }
+    object {
+        monitor
+        rotate 10*y
+        translate <0.8, 1.5, 0.3>
+    }
+    object {
+        pc
+        translate <1.93, 0.06, -0.25>
+    }
+}
 
 #declare room = merge {
     object { 
@@ -345,17 +478,14 @@ plane {
         translate <-3.6, 0, 2.5>
     }
     object {
-        base_of_desk
+        desk
         rotate 90*y
-        translate <4, 0, 2.5>
+        translate <4, 0.12, 2.5>
     }
     object {
         chair
         rotate 45*y
         translate <2, 0, 2.25>
-    }
-    object {
-        monitor
     }
 }
 
@@ -394,9 +524,9 @@ light_source {
     looks_like { Lightbulb }
 }
 
-light_source {
-    <0,1,-2>
-    color White
-    spotlight
-    point_at <0, 0, 0>
-}
+//light_source {
+//    <0,1,-2>
+//    color White
+//    spotlight
+//    point_at <-1.5, 0, 0>
+//}
