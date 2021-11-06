@@ -15,8 +15,8 @@ camera {
     //look_at <-2.5, 0, 5> // camera wall near the window
     //location <5, 2, 0> // room from the side
     //look_at <-2, 1, 0> // room from the side
-    location <0, 2, -10>
-    look_at <0, 1, 2>
+    location <-4, 3.5, 3.5>
+    look_at <8, 1, -1>
 }
 
 sky_sphere { S_Cloud2 }
@@ -594,6 +594,40 @@ plane {
     }
 }
 
+#declare tv_hang = merge {
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <0.3, 0.3, 0.02>
+    }
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <0.05, 0.05, 0.2>
+        translate <0, 0.23, -0.2>
+        rotate -30*y
+    }
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <0.05, 0.048, 0.2>
+        rotate 45*y
+        translate <0, 0.23, -0.45>
+    }
+    scale 1.3 *z
+    texture { Silver_Texture }
+    translate <0, 1, 0>
+}
+
+#declare tv = merge {
+    object {
+        tv_hang
+    }
+    object {
+        monitor_connect_screen_frame
+        scale <1.5, 1.5, 0>
+        rotate 45*y
+        translate <-0.25, 0, -0.86>
+    }
+}
+
 #declare room = merge {
     object { 
         ground_ceiling
@@ -636,12 +670,17 @@ plane {
     object {
         desk
         rotate 90*y
-        translate <4, 0.12, 2.5>
+        translate <4, 0.12, 2.35>
     }
     object {
         chair
         rotate 45*y
         translate <2, 0, 2.25>
+    }
+    object {
+        tv
+        rotate 90*y
+        translate <4.9, 1.5, -1.3>
     }
     object {
         wardrobe
@@ -650,8 +689,133 @@ plane {
     }
 }
 
+#declare cut_out_room = difference {
+    object {
+        room
+    }
+    box { 
+        <-3, 0, -3>, <3, 6, 3>
+        translate <0.8, 0, -8.7>
+        rotate -45*y
+        pigment { MyGray }
+    }
+}
+
+#declare door_hole = box {
+    <-1, 0, -1>, <1, 0.8, 1>
+    scale <1.1, 0, 0>
+    translate <0, 0.3, 0>
+}
+
+#declare door_with_holes = difference {
+    box {
+        <-1, 0, -1>, <1, 5, 1>
+        scale <1.4, 0, 0.05>
+    }
+    object {
+        door_hole
+    }
+    object {
+        door_hole
+        translate <0, 0.9, 0>
+    }
+    object {
+        door_hole
+        translate <0, 1.8, 0>
+    }
+    object {
+        door_hole
+        translate <0, 2.7, 0>
+    }
+    object {
+        door_hole
+        translate <0, 3.6, 0>
+    }
+    texture { T_Wood2 }
+}
+
+#declare door_glass = box {
+    <-1, 0, -1>, <1, 0.8, 1>
+    scale <1.1, 0, 0.05>
+    translate <0, 0.3, 0>
+    texture { 
+        pigment { rgbf <0.98, 1.0, 0.99, 0> }
+        finish {
+            ambient 0.1
+            diffuse 0.1
+            reflection .25
+            specular 1
+            roughness .001
+        }
+    }
+}
+
+#declare door_knob = merge {
+    cylinder {
+        <0, 0, 0>, <0, 0.01, 0>, 0.06
+        rotate 90*x
+        translate <0, 0, 0.125>
+    }
+    cylinder {
+        <0, 0, 0>, <0, 0.125, 0>, 0.02
+        rotate 90*x
+    }
+    cylinder {
+        <0, 0, 0>, <0, 0.25, 0>, 0.02
+        rotate <90, -90, 0>
+        translate <0, 0, 0.03>
+    }
+    texture { Silver_Texture }
+}
+
+#declare door = merge {
+    object {
+        door_with_holes
+    }
+    object {
+        door_glass
+    }
+    object {
+        door_glass
+        translate <0, 0.9, 0>
+    }
+    object {
+        door_glass
+        translate <0, 1.8, 0>
+    }
+    object {
+        door_glass
+        translate <0, 2.7, 0>
+    }
+    object {
+        door_glass
+        translate <0, 3.6, 0>
+    }
+    object {
+        door_knob
+        translate <1.25, 2.5, -0.18>
+    }
+    object {
+        door_knob
+        rotate <0, 180, 180>
+        translate <1.25, 2.5, 0.18>
+    }
+}
+
+#declare room_finished = merge {
+    object {
+        cut_out_room
+    }
+    object {
+        door
+        scale x*0.9
+        rotate -45*y
+        translate <4.05, 0, -4.05>
+    }
+}
+
 object {
-    room
+    room_finished
 }
 
 #declare Lightbulb = union {
@@ -678,7 +842,7 @@ object {
 }
 
 light_source {
-    <0, 4, -2>
+    <0, 4.75, -2>
     color White
     //area_light <1, 0, 0>, <0, 1, 0>, 2, 2
     //jitter
