@@ -15,7 +15,7 @@ camera {
     //look_at <-2.5, 0, 5> // camera wall near the window
     //location <5, 2, 0> // room from the side
     //look_at <-2, 1, 0> // room from the side
-    location <0, 2, -5>
+    location <0, 2, -10>
     look_at <0, 1, 2>
 }
 
@@ -88,29 +88,6 @@ plane {
     }
 }
 
-#declare bed = merge {
-    // Base of the bed
-    object {
-        box {
-            <-1, 0, -1>, <1, 2, 1>
-        }
-        texture { T_Wood2 }
-        scale <2.5, 0.75, 1.25>
-    }
-    // Mattress
-    object {
-        box {<-1, 0, -1>, <1, 2, 1>}
-        scale <2.25, 0.2, 1.15>
-        translate <0, 1.25, 0>
-        texture {
-            pigment { color White }
-            normal { bumps 1 }
-            finish { phong 1 }
-        }
-    }
-    scale y * 0.8
-    rotate 90*y
-}
 
 
 #declare chair_wheel = difference {
@@ -445,6 +422,178 @@ plane {
     }
 }
 
+
+#declare bed = merge {
+    // Base of the bed
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        texture { T_Wood2 }
+        scale <2.5, 0.75, 1.25>
+        scale y * 0.8
+    }
+    // Mattress
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <2.25, 0.1, 1.15>
+        translate <0, 1.5, 0>
+        texture {
+            pigment { color White }
+            normal { bumps 1 }
+            finish { phong 1 }
+        }
+        scale y * 0.8
+    }
+    // Pillow
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <0.5, 0.1, 0.8>
+        translate <-1.55, 1.7, 0>
+        pigment { White }
+        scale y * 0.8
+    }
+    // duvet
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <1.5, 0.05, 1.1>
+        translate <0.7, 1.7, 0>
+        pigment { MyGray }
+        scale y * 0.8
+    }
+    object {
+        drawer
+        rotate 180*y
+        scale <1.5, 0, 0>
+        translate <-1.7, 0.1, 1.25>
+    }
+    object {
+        drawer
+        rotate 180*y
+        scale <1.5, 0, 0>
+        translate <0, 0.1, 1.25>
+    }
+    object {
+        drawer
+        rotate 180*y
+        scale <1.5, 0, 0>
+        translate <1.7, 0.1, 1.25>
+    }
+}
+
+#declare wardrobe_base = difference {
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <1.75, 2, 0>
+        translate <0, 0.02, 0>
+    }
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <0.8, 1.90, 1.2>
+        translate <-0.85, 0.1, -0.2>
+    }
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <0.8, 1.90, 1.2>
+        translate <0.85, 0.1, -0.2>
+    }
+}
+
+#declare wardrobe_shelf = box {
+    <-1, 0, -1>, <1, 2, 1>
+    scale <0.8, 0.05, 0>
+}
+
+#declare wardrobe_hang = cylinder {
+    <0,0,0>, <0,1,0>, 0.04
+    scale y * 1.7
+    rotate 90 * z
+    translate <1.74, 3.75, 0.25>
+    texture { Silver_Texture }
+}
+
+#declare vert_wardrobe_finish = cylinder {
+    <0, 0, 0>, <0, 4, 0>, 0.02
+    texture { Silver_Texture }
+}
+
+#declare horizon_wardrobe_finish = cylinder {
+    <0, 0, 0>, <0, 2, 0>, 0.02
+    rotate 90*z
+    texture { Silver_Texture }
+}
+
+#declare wardrobe_door = merge {
+    box {
+        <-1, 0, -1>, <1, 2, 1>
+        scale <1, 2, 0.02>
+        translate <0, 0.02, -1>
+        texture { T_Wood2 }
+    }
+    object {
+        vert_wardrobe_finish
+        translate <-1.02, 0.02, -1.01>
+    }
+    object {
+        vert_wardrobe_finish
+        translate <1.02, 0.02, -1.01> 
+    }
+    // TOP
+    object {
+        horizon_wardrobe_finish
+        translate <1, 4.02, -1.01>
+    }
+    // BOTTOM
+    object {
+        horizon_wardrobe_finish
+        translate <1, 0.02, -1.01>
+    }
+    // 1/4
+    object {
+        horizon_wardrobe_finish
+        translate <1, 1.02, -1.01>
+    }
+    // 3/4
+    object {
+        horizon_wardrobe_finish
+        translate <1, 3.02, -1.01>
+    }
+}
+
+#declare wardrobe = merge {
+    merge {
+        object {
+            wardrobe_base
+        }
+        object {
+            wardrobe_shelf
+            translate <0.85, 2, 0>
+        }
+        object {
+            wardrobe_shelf
+            translate <-0.85, 1, 0>
+        }
+        object {
+            wardrobe_shelf
+            translate <-0.85, 2, 0>
+        }
+        object {
+            wardrobe_shelf
+            translate <-0.85, 3, 0>
+        }
+        texture { T_Wood2 }
+    }
+    object {
+        wardrobe_door
+        translate <-0.73, 0, 0>
+    }
+    object {
+        wardrobe_door
+        translate <0.83, 0, -0.03>
+    }
+    object {
+        wardrobe_hang
+    }
+}
+
 #declare room = merge {
     object { 
         ground_ceiling
@@ -465,6 +614,12 @@ plane {
     }
     object {
         wall
+        rotate 90*y
+        pigment { White }
+        translate <0, 0, -5>
+    }
+    object {
+        wall
         pigment { White }
         translate <5, 0, 0>
     }
@@ -475,7 +630,8 @@ plane {
     }
     object {
         bed
-        translate <-3.6, 0, 2.5>
+        rotate 90*y
+        translate <-3.6, 0.12, 2.5>
     }
     object {
         desk
@@ -486,6 +642,11 @@ plane {
         chair
         rotate 45*y
         translate <2, 0, 2.25>
+    }
+    object {
+        wardrobe
+        rotate 180*y
+        translate <-3, 0.12, -4>
     }
 }
 
@@ -517,7 +678,7 @@ object {
 }
 
 light_source {
-    <0, 4, 0>
+    <0, 4, -2>
     color White
     //area_light <1, 0, 0>, <0, 1, 0>, 2, 2
     //jitter
@@ -525,8 +686,8 @@ light_source {
 }
 
 //light_source {
-//    <0,1,-2>
+//    <0,1,-4>
 //    color White
 //    spotlight
-//    point_at <-1.5, 0, 0>
+//    point_at <0, 2, 0>
 //}
